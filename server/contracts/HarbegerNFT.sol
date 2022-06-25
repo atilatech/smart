@@ -3,8 +3,7 @@ pragma solidity ^0.8.3;
 
 import "./ERC721Full.sol";
 
-
-contract PatronageCollectibles is ERC721Full {
+contract HarbegerNFT is ERC721Full {
   event Minted(uint indexed tokenId, address from);
   event Deposited(uint indexed tokenId, uint value, address from);
   event PriceUpdated(uint indexed tokenId, uint newPrice, address from);
