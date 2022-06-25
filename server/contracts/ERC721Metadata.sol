@@ -1,8 +1,9 @@
-pragma solidity 0.5.4;
+// SPDX-License-Identifier: MIT OR Apache-2.0
+pragma solidity ^0.8.3;
 
 import "./ERC721.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/IERC721Metadata.sol";
-import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 contract ERC721Metadata is ERC165, ERC721, IERC721Metadata {
     // Token name

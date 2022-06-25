@@ -1,8 +1,9 @@
-pragma solidity 0.5.4;
+// SPDX-License-Identifier: MIT OR Apache-2.0
+pragma solidity ^0.8.3;
 
-import "openzeppelin-solidity/contracts/token/ERC721/IERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "./ERC721.sol";
-import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 /**
  * @title ERC-721 Non-Fungible Token with optional enumeration extension logic

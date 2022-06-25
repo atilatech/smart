@@ -1,13 +1,14 @@
-pragma solidity 0.5.4;
+// SPDX-License-Identifier: MIT OR Apache-2.0
+pragma solidity ^0.8.3;
 
-import "openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/utils/Address.sol";
-import "openzeppelin-solidity/contracts/drafts/Counters.sol";
-import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
-contract ERC721 is ERC165, IERC721 {
+contract ERC721 is ERC165Storage, IERC721 {
     using SafeMath for uint256;
     using Address for address;
     using Counters for Counters.Counter;
@@ -54,7 +55,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param owner address to query the balance of
      * @return uint256 representing the amount owned by the passed address
      */
-    function balanceOf(address owner) public view returns (uint256) {
+    function balanceOf(address owner) override public view returns (uint256) {
         require(owner != address(0), "ERC721: balance query for the zero address");
 
         return _ownedTokensCount[owner].current();
@@ -65,7 +66,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param tokenId uint256 ID of the token to query the owner of
      * @return address currently marked as the owner of the given token ID
      */
-    function ownerOf(uint256 tokenId) public view returns (address) {
+    function ownerOf(uint256 tokenId) override public view returns (address) {
         return _tokenOwner[tokenId];
     }
 
@@ -77,7 +78,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param to address to be approved for the given token ID
      * @param tokenId uint256 ID of the token to be approved
      */
-    function approve(address to, uint256 tokenId) public {
+    function approve(address to, uint256 tokenId) override public {
         address owner = ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
@@ -95,7 +96,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param tokenId uint256 ID of the token to query the approval of
      * @return address currently approved for the given token ID
      */
-    function getApproved(uint256 tokenId) public view returns (address) {
+    function getApproved(uint256 tokenId) override public view returns (address) {
         require(_exists(tokenId), "ERC721: approved query for nonexistent token");
 
         return _tokenApprovals[tokenId];
@@ -107,7 +108,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param to operator address to set the approval
      * @param approved representing the status of the approval to be set
      */
-    function setApprovalForAll(address to, bool approved) public {
+    function setApprovalForAll(address to, bool approved) override public {
         require(to != msg.sender, "ERC721: approve to caller");
 
         _operatorApprovals[msg.sender][to] = approved;
@@ -120,14 +121,14 @@ contract ERC721 is ERC165, IERC721 {
      * @param operator operator address which you want to query the approval of
      * @return bool whether the given operator is approved by the given owner
      */
-    function isApprovedForAll(address owner, address operator) public view returns (bool) {
+    function isApprovedForAll(address owner, address operator) override public view returns (bool) {
         return _operatorApprovals[owner][operator];
     }
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
      */
-    function transferFrom(address, address, uint256) public {
+    function transferFrom(address, address, uint256)  override public {
         revert("Non-Transferrable.");
     }
 
@@ -142,7 +143,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public {
+    function safeTransferFrom(address from, address to, uint256 tokenId) override public {
         safeTransferFrom(from, to, tokenId, "");
     }
 
@@ -158,7 +159,7 @@ contract ERC721 is ERC165, IERC721 {
      * @param tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public {
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) override public {
         transferFrom(from, to, tokenId);
         require(_checkOnERC721Received(from, to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
     }
