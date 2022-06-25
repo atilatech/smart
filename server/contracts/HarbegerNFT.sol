@@ -175,9 +175,9 @@ contract HarbegerNFT is ERC721Full {
     address owner = ownerOf(tokenId);
     uint taxBalance = taxes[tokenId];
     uint price = prices[tokenId];
-    bool canReclaim = canReclaim(tokenId);
+    bool _canReclaim = canReclaim(tokenId);
   
-    return (creator, owner, taxBalance, price, canReclaim);
+    return (creator, owner, taxBalance, price, _canReclaim);
   }
 
   /**
