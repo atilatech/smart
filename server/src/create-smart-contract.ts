@@ -7,21 +7,22 @@ export const createNFTContract = (contract: NFTContract) => {
 
     const contractDirectory = __dirname + '/../../contracts'
     console.log({contractDirectory});
-    let templateString = readFileSync(`${contractDirectory}/NFT.template.sol`).toString();
+    let contractCode = readFileSync(`${contractDirectory}/NFT.template.sol`).toString();
 
-    templateString = templateString.replace("__CONTRACT_NAME__", contract.name);
-    templateString = templateString.replace("__CONTRACT_SYMBOL__", contract.symbol);
+    contractCode = contractCode.replace("__CONTRACT_NAME__", contract.name);
+    contractCode = contractCode.replace("__CONTRACT_SYMBOL__", contract.symbol);
 
-    if (contract.maxSupply) {
-        templateString = templateString.replace("//__MAX_SUPPLY_COUNT__", `uint256 public constant maxSupply = ${contract.maxSupply};`);
-        templateString = templateString.replace("//__MAX_SUPPLY_REQUIRE__", `require(_tokenIds.current() < maxSupply);`);
-    }
-    templateString = templateString.replace(/^.*__EXAMPLE__.*$/mg, "");
+    contractCode = contractCode.replace(/^.*__MAX_SUPPLY_COUNT__.*$/mg, contract.maxSupply ? `uint256 public constant maxSupply = ${contract.maxSupply};` : "");
+    contractCode = contractCode.replace(/^.*__MAX_SUPPLY_REQUIRE__.*$/mg, contract.maxSupply ? `require(_tokenIds.current() < maxSupply);` : "");
+
+    contractCode = contractCode.replace(/^.*__EXAMPLE__.*$/mg, "");
 
     const fileHash = randomString();
     const generatedFileName = `${contractDirectory}/NFT.${fileHash}.sol`;
-    writeFileSync(generatedFileName, templateString);
+    writeFileSync(generatedFileName, contractCode);
     console.log(`Created file: ${generatedFileName}`)
 }
 
-createNFTContract({name: "Tomiwa", symbol: "TA", maxSupply: 100});
+createNFTContract({
+    name: "Tomiwa",
+    symbol: "TA"});
