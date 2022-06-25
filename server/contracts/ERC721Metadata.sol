@@ -27,9 +27,9 @@ contract ERC721Metadata is ERC165, ERC721, IERC721Metadata {
     /**
      * @dev Constructor function
      */
-    constructor (string memory name, string memory symbol) public {
-        _name = name;
-        _symbol = symbol;
+    constructor (string memory token_name, string memory token_symbol) {
+        _name = token_name;
+        _symbol = token_symbol;
 
         // register the supported interfaces to conform to ERC721 via ERC165
         _registerInterface(_INTERFACE_ID_ERC721_METADATA);
@@ -39,7 +39,7 @@ contract ERC721Metadata is ERC165, ERC721, IERC721Metadata {
      * @dev Gets the token name.
      * @return string representing the token name
      */
-    function name() external view returns (string memory) {
+    function name() override external view returns (string memory) {
         return _name;
     }
 
@@ -47,7 +47,7 @@ contract ERC721Metadata is ERC165, ERC721, IERC721Metadata {
      * @dev Gets the token symbol.
      * @return string representing the token symbol
      */
-    function symbol() external view returns (string memory) {
+    function symbol() override external view returns (string memory) {
         return _symbol;
     }
 
@@ -56,7 +56,7 @@ contract ERC721Metadata is ERC165, ERC721, IERC721Metadata {
      * Throws if the token ID does not exist. May return an empty string.
      * @param tokenId uint256 ID of the token to query
      */
-    function tokenURI(uint256 tokenId) external view returns (string memory) {
+    function tokenURI(uint256 tokenId) override external view returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         return _tokenURIs[tokenId];
     }
@@ -79,12 +79,16 @@ contract ERC721Metadata is ERC165, ERC721, IERC721Metadata {
      * @param owner owner of the token to burn
      * @param tokenId uint256 ID of the token being burned by the msg.sender
      */
-    function _burn(address owner, uint256 tokenId) internal {
+    function _burn(address owner, uint256 tokenId) override internal {
         super._burn(owner, tokenId);
 
         // Clear metadata (if any)
         if (bytes(_tokenURIs[tokenId]).length != 0) {
             delete _tokenURIs[tokenId];
         }
+    }
+
+    function supportsInterface(bytes4 interfaceId) override(ERC165, IERC165, ERC165Storage) public view returns (bool) {
+        return interfaceId == type(IERC165).interfaceId;
     }
 }
