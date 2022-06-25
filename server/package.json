@@ -4,8 +4,10 @@
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.6.0",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "hardhat": "^2.9.9"
   },
   "scripts": {
     "build": "npx tsc",
