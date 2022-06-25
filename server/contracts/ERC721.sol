@@ -45,7 +45,7 @@ contract ERC721 is ERC165Storage, IERC721 {
      */
     bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
 
-    constructor () public {
+    constructor () {
         // register the supported interfaces to conform to ERC721 via ERC165
         _registerInterface(_INTERFACE_ID_ERC721);
     }
@@ -127,8 +127,9 @@ contract ERC721 is ERC165Storage, IERC721 {
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
+     * TODO: Do we want this to be Non-Transferrable?
      */
-    function transferFrom(address, address, uint256)  override public {
+    function transferFrom(address, address, uint256)  override public pure {
         revert("Non-Transferrable.");
     }
 

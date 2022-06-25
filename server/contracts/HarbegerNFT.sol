@@ -12,8 +12,10 @@ contract HarbegerNFT is ERC721Full {
   event Refunded(uint indexed tokenId, uint refund, address to);
   event Reclaimed(uint indexed tokenId, address from);
 
-  uint32 private constant TAX_DENOMINATOR = 1000000;
-  uint32 private constant TAX_NUMERATOR = 10000; // 1%, make configurable
+  uint32 private constant TAX_DENOMINATOR = 10000;
+  
+  // TAX_NUMERATOR and TAX_INTERVAL should be configurable values
+  uint32 private constant TAX_NUMERATOR = 100; // 1%
   uint32 private constant TAX_INTERVAL = 1 minutes;
 
   // Mapping from creator to list of token IDs
@@ -28,8 +30,7 @@ contract HarbegerNFT is ERC721Full {
   mapping(uint => uint) public prices;
   mapping(uint => uint) public paidThru;
 
-  constructor () public ERC721Full("Patronage Collectibles", "PAT") {}
-
+  constructor () public ERC721Full("__CONTRACT_NAME", "__CONTRACT_SYMBOL__") {}
   /**
   * @dev Throws if called by any account other than the owner of a tokenId.
   */
