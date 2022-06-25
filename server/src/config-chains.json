@@ -1,0 +1,95 @@
+{
+    "4": {
+        "NETWORK_NAME": "Rinkeby",
+        "CHAIN_NAME": "Ethereum",
+        "CURRENCY_SYMBOL": "ETH",
+        "NFT_MARKETPLACE_ADDRESS": "0x3e37755203840f2a5750d11118702a4124e6ad54",
+        "NFT_ADDRESS": "0x5f3cc650c751fa194f0d1537ecfbb55a2c40a995",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
+        "CHAIN_ID": "4",
+        "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
+        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee"
+    },
+    "56": {
+        "NETWORK_NAME": "Mainnet",
+        "CHAIN_NAME": "Binance Smart Chain",
+        "CURRENCY_SYMBOL": "BNB",
+        "NFT_MARKETPLACE_ADDRESS": "0x093ded22697313310c4fcdd1a75edf8facba8f90",
+        "NFT_ADDRESS": "0x090d4622ae91acdcfb7354872a934f4e8a1e21a9",
+        "IS_MAIN_NET": true,
+        "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
+        "CHAIN_ID": "56",
+        "BLOCK_EXPLORER_URL": "https://bscscan.com",
+        "RPC_PROVIDER_URL": "https://bsc-dataseed.binance.org"
+    },
+    "97": {
+        "NETWORK_NAME": "Testnet",
+        "CHAIN_NAME": "Binance Smart Chain",
+        "CURRENCY_SYMBOL": "BNB",
+        "NFT_MARKETPLACE_ADDRESS": "0x69987ab30add91fa5ef87c9e3572e8e5a787cbbf",
+        "NFT_ADDRESS": "0xd52d9f6f4e89aa19266fd2b0de1fe81b6e5d1762",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
+        "CHAIN_ID": "97",
+        "BLOCK_EXPLORER_URL": "https://testnet.bscscan.com",
+        "RPC_PROVIDER_URL": "https://data-seed-prebsc-1-s1.binance.org:8545"
+    },
+    "137": {
+        "NETWORK_NAME": "Mainnet",
+        "CHAIN_NAME": "Polygon",
+        "CURRENCY_SYMBOL": "MATIC",
+        "NFT_MARKETPLACE_ADDRESS": "0xa94EC56924E2E4dcCb48e4987fEadA4B646637a3",
+        "NFT_ADDRESS": "0x4ad4ab97820137e75ef98fc29ee0e9077130e905",
+        "IS_MAIN_NET": true,
+        "LOGO_URL": "https://brandlogovector.com/wp-content/uploads/2021/12/Polygon-Crypto-Icon-Logo-Small.png",
+        "CHAIN_ID": "137",
+        "BLOCK_EXPLORER_URL": "https://polygonscan.com",
+        "RPC_PROVIDER_URL": "https://polygon-rpc.com"
+    },
+    "44787": {
+        "NETWORK_NAME": "Alfajores",
+        "CHAIN_NAME": "Celo",
+        "NFT_MARKETPLACE_ADDRESS": "0xF638ec8262a2DB3e42fc3780474400435Fdb7DcF",
+        "NFT_ADDRESS": "0x5fBc39092373b0e1c125C0e29c01E12045d3fe81",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
+        "CHAIN_ID": "44787",
+        "BLOCK_EXPLORER_URL": "https://alfajores-blockscout.celo-testnet.org",
+        "RPC_PROVIDER_URL": "https://celo-alfajores--rpc.datahub.figment.io/apikey/9bb896aa7d9e0050154dc5d7a49cd832"
+    },
+    "80001": {
+        "NETWORK_NAME": "Mumbai",
+        "CHAIN_NAME": "Polygon",
+        "CURRENCY_SYMBOL": "MATIC",
+        "NFT_MARKETPLACE_ADDRESS": "0xe7fd27ac1571c82e6f33533fc2fd1e1aa3a122bf",
+        "NFT_ADDRESS": "0x9863f06d4f22f01c853eac3d3bfef26af7e70bd8",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://brandlogovector.com/wp-content/uploads/2021/12/Polygon-Crypto-Icon-Logo-Small.png",
+        "CHAIN_ID": "80001",
+        "BLOCK_EXPLORER_URL": "https://mumbai.polygonscan.com",
+        "RPC_PROVIDER_URL": "https://matic-mumbai.chainstacklabs.com"
+    },
+    "1666700000": {
+        "NETWORK_NAME": "Testnet",
+        "CHAIN_NAME": "Harmony",
+        "NFT_MARKETPLACE_ADDRESS": "0x069c4aF106A56e05030d51141551D50bd994a345",
+        "NFT_ADDRESS": "0x4ad4ab97820137e75Ef98FC29Ee0e9077130E905",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://s2.coinmarketcap.com/static/img/coins/200x200/3945.png",
+        "CHAIN_ID": "1666700000",
+        "BLOCK_EXPLORER_URL": "https://explorer.pops.one",
+        "RPC_PROVIDER_URL": "https://api.s0.b.hmny.io"
+    },
+    "localhost": {
+        "NETWORK_NAME": "Localhost",
+        "CHAIN_NAME": "Ethereum",
+        "NFT_MARKETPLACE_ADDRESS": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "NFT_ADDRESS": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
+        "CHAIN_ID": "localhost",
+        "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
+        "RPC_PROVIDER_URL": ""
+    }
+}

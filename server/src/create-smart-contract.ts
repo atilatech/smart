@@ -10,8 +10,7 @@ export const createSmartContract = async (contract: NFTContract) => {
 
     contractCode = writeCode(contractCode, contract);
 
-    const fileHash = randomString();
-    const generatedFileName = `NFT.${fileHash}.sol`
+    const generatedFileName = "NFT.sol";
     const generatedFilePath = `${contractDirectory}/${generatedFileName}`;
 
     writeFileSync(generatedFilePath, contractCode);

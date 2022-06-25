@@ -15,8 +15,8 @@ contract NFT is ERC721URIStorage, IERC2981, Ownable {
     Counters.Counter private _tokenIds;
     address private royaltyRecipient;
     uint256 private royaltyFeeBasisPoints;
-    //__MAX_SUPPLY_COUNT__
-    //__EXAMPLE__ uint256 public constant maxSupply = 2;
+    uint256 public constant maxSupply = 99;
+
 
     event NFTMinted (
         uint256 indexed tokenId,
@@ -24,15 +24,15 @@ contract NFT is ERC721URIStorage, IERC2981, Ownable {
     );
 
     constructor(address owner, address defaultRoyaltyRecipient, uint256 defaultRoyaltyFeeBasisPoints) 
-    ERC721("__CONTRACT_NAME__", "__CONTRACT_SYMBOL__") {
+    ERC721("Tomiwa", "TA") {
         royaltyRecipient = defaultRoyaltyRecipient;
         royaltyFeeBasisPoints = defaultRoyaltyFeeBasisPoints;
         _transferOwnership(owner);
     }
 
     function createToken(string memory tokenURI) public returns (uint) {
-        //__MAX_SUPPLY_REQUIRE__
-        //__EXAMPLE__ require(_tokenIds.current() < maxSupply);
+    require(_tokenIds.current() < maxSupply);
+
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
         _mint(msg.sender, newTokenId);
