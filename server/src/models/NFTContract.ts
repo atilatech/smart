@@ -3,7 +3,7 @@ export interface NFTContract {
     symbol: string,
     maxSupply?: number | null,
     royalty?: {
-        recipient_address: string,
-        royalty_fee_percentage: number,
+        recipientAddress: string,
+        royaltyFeePercentage: number,
     } | null
 }

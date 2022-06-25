@@ -13,8 +13,8 @@ import "hardhat/console.sol";
 contract NFT is ERC721URIStorage, IERC2981, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    address private royalty_recipient;
-    uint256 private royalty_fee_basis_points;
+    address private royaltyRecipient;
+    uint256 private royaltyFeeBasisPoints;
     //__MAX_SUPPLY_COUNT__
     //__EXAMPLE__ uint256 public constant maxSupply = 2;
 
@@ -23,10 +23,10 @@ contract NFT is ERC721URIStorage, IERC2981, Ownable {
         string tokenURI
     );
 
-    constructor(address default_royalty_recipient, uint256 default_royalty_fee_basis_points) 
+    constructor(address defaultRoyaltyRecipient, uint256 defaultRoyaltyFeeBasisPoints) 
     ERC721("__CONTRACT_NAME__", "__CONTRACT_SYMBOL__") {
-        royalty_recipient = default_royalty_recipient;
-        royalty_fee_basis_points = default_royalty_fee_basis_points;
+        royaltyRecipient = defaultRoyaltyRecipient;
+        royaltyFeeBasisPoints = defaultRoyaltyFeeBasisPoints;
     }
 
     function createToken(string memory tokenURI) public returns (uint) {
@@ -46,7 +46,7 @@ contract NFT is ERC721URIStorage, IERC2981, Ownable {
     // Maintain flexibility to modify royalties recipient (could also add basis points).
     function _setRoyalties(address newRecipient) internal {
         require(newRecipient != address(0), "Royalties: new recipient is the zero address");
-        royalty_recipient = newRecipient;
+        royaltyRecipient = newRecipient;
     }
 
     function setRoyalties(address newRecipient) external onlyOwner {
@@ -57,7 +57,7 @@ contract NFT is ERC721URIStorage, IERC2981, Ownable {
     function royaltyInfo(uint256 _tokenId, uint256 _salePrice) external view override
         returns (address receiver, uint256 royaltyAmount)
     {
-        return (royalty_recipient, (_salePrice * royalty_fee_basis_points) / 10000);
+        return (royaltyRecipient, (_salePrice * royaltyFeeBasisPoints) / 10000);
     }
 
     // EIP2981 standard Interface return. Adds to ERC721 and ERC165 Interface returns.

@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { NFTContract } from './src/models/NFTContract';
 import { createSmartContract } from './src/create-smart-contract';
 
 dotenv.config();
@@ -14,7 +13,7 @@ app.post('/api/v1/contract',
 async (req: Request, res: Response) => {
 
   try {
-    const response = createSmartContract(req.body.contract);
+    const response = await createSmartContract(req.body.contract);
     res.json(response);
   } catch (error) {
     res.status(400).json(error);
@@ -23,7 +22,7 @@ async (req: Request, res: Response) => {
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
+  res.send("Welcome to the Smart API");
 });
 
 app.listen(port, () => {
