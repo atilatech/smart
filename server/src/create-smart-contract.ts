@@ -3,10 +3,9 @@ import path from "path";
 import { NFTContract } from "./models/NFTContract"
 import { randomString } from "./utils/string-utils";
 
-export const createNFTContract = (contract: NFTContract) => {
+export const createSmartContract = (contract: NFTContract) => {
 
-    const contractDirectory = __dirname + '/../../contracts'
-    console.log({contractDirectory});
+    const contractDirectory = __dirname + '/../../contracts';
     let contractCode = readFileSync(`${contractDirectory}/NFT.template.sol`).toString();
 
     contractCode = contractCode.replace("__CONTRACT_NAME__", contract.name);
@@ -20,9 +19,9 @@ export const createNFTContract = (contract: NFTContract) => {
     const fileHash = randomString();
     const generatedFileName = `${contractDirectory}/NFT.${fileHash}.sol`;
     writeFileSync(generatedFileName, contractCode);
-    console.log(`Created file: ${generatedFileName}`)
-}
+    console.log(`Created file: ${generatedFileName}`);
 
-createNFTContract({
-    name: "Tomiwa",
-    symbol: "TA"});
+    return {
+        contractCode,
+    }
+}
