@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { CONFIG_CHAINS } from "./config";
 import { NFTContract } from "./models/NFTContract"
 import { getAccount, getProvider } from "./utils/network-utils";
-import NFTInterface from "./artifacts/contracts/NFT.sol/NFT.json";
+import HarbegerNFT from "./artifacts/contracts/HarbegerNFT.template.sol/HarbegerNFT.json";
 import { createSmartContract } from "./create-smart-contract";
 
 
@@ -23,7 +23,7 @@ export const deploySmartContract = async (contract: NFTContract) => {
   const provider = getProvider(chainId.toString());
   const gasPrice = await provider.getGasPrice();
   let NFT;
-  NFT = new ethers.ContractFactory(NFTInterface.abi, NFTInterface.bytecode, account);
+  NFT = new ethers.ContractFactory(HarbegerNFT.abi, HarbegerNFT.bytecode, account);
   
   const nft = await NFT.deploy({gasPrice});
   await nft.deployed();

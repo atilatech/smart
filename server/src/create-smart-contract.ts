@@ -27,12 +27,12 @@ function writeCode(contractCode: string, contract: NFTContract) {
 
     if (contract.harbegerTax?.percentage) {
         const taxBasisPoints = contract.harbegerTax.percentage * 100;
-        contractCode = contractCode.replace("constant TAX_NUMERATOR = 100", `"constant TAX_NUMERATOR = ${taxBasisPoints}"`);
+        contractCode = contractCode.replace("constant TAX_NUMERATOR = 100", `constant TAX_NUMERATOR = ${taxBasisPoints}`);
     }    
 
     if (contract.harbegerTax?.frequency) {
         const taxFrequency = contract.harbegerTax.frequency;
-        contractCode = contractCode.replace("constant TAX_INTERVAL = 1 minutes", `"constant TAX_INTERVAL = ${taxFrequency}"`);
+        contractCode = contractCode.replace("constant TAX_INTERVAL = 1 minutes", `constant TAX_INTERVAL = ${taxFrequency}`);
     }
 
 

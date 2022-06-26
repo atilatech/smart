@@ -209,7 +209,7 @@ contract ERC721Harbeger is ERC721CustomURIStorage, ERC165Storage {
      * @param to The address that will own the minted token
      * @param tokenId uint256 ID of the token to be minted
      */
-    function _mint(address to, uint256 tokenId) override internal {
+    function _mint(address to, uint256 tokenId) override virtual internal {
         require(to != address(0), "ERC721: mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
 
@@ -226,7 +226,7 @@ contract ERC721Harbeger is ERC721CustomURIStorage, ERC165Storage {
      * @param owner owner of the token to burn
      * @param tokenId uint256 ID of the token being burned
      */
-    function _burn(address owner, uint256 tokenId) internal {
+    function _burn(address owner, uint256 tokenId) virtual internal {
         require(ownerOf(tokenId) == owner, "ERC721: burn of token that is not own");
 
         _clearApproval(tokenId);
@@ -253,7 +253,7 @@ contract ERC721Harbeger is ERC721CustomURIStorage, ERC165Storage {
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
-    function _transferFrom(address from, address to, uint256 tokenId) internal {
+    function _transferFrom(address from, address to, uint256 tokenId) internal virtual {
         require(ownerOf(tokenId) == from, "ERC721: transfer of token that is not own");
         require(to != address(0), "ERC721: transfer to the zero address");
 
@@ -279,7 +279,7 @@ contract ERC721Harbeger is ERC721CustomURIStorage, ERC165Storage {
      * @return bool whether the call correctly returned the expected magic value
      */
     function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)
-        override private returns (bool)
+        override internal returns (bool)
     {
         if (!to.isContract()) {
             return true;
