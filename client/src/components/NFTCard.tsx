@@ -11,6 +11,7 @@ import CryptoPrice from './CryptoPrice';
 import CryptoPriceEdit from './CryptoPriceEdit';
 
 import Web3Modal from 'web3modal';
+import { CreateRoyaltyStream } from './CreateRoyaltyStream';
 
 function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
 
@@ -20,6 +21,8 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
     const { chainId } = nft;
     let signer: ethers.providers.JsonRpcSigner;
     const [responseMessage, setResponseMessage] = useState<{[key: string]: {message: string, type: AlertProps["type"], loading?: boolean}}>({});
+
+    const [isCreateRoyaltyStream, setisCreateRoyaltyStream] = useState(false);
 
     const activeChain = CONFIG_CHAINS[chainId!];
 
@@ -253,6 +256,14 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
                     <Button onClick={payRoyalties} className="mb-3">
                         Pay Royalties
                     </Button>
+
+                    <Button onClick={() => setisCreateRoyaltyStream(!isCreateRoyaltyStream)} className="mb-3" color='green'>
+                        Stream Royalties
+                    </Button>
+
+                    {isCreateRoyaltyStream && 
+                        <CreateRoyaltyStream />
+                    }
                     </>
                 </li>
                 <li>
