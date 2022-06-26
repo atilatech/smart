@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import HarbegerNFT from "../artifacts/contracts/HarbegerNFT.sol/HarbegerNFT.json";
 import { ethers } from "ethers";
 import Web3Modal from 'web3modal';
-import { Button, Col, Input, Row, Spin } from 'antd';
+import { Button, Col, Input, Row, Select, Spin } from 'antd';
 import Moralis from 'moralis';
 import { Chain } from '../models/Chain';
 import { components } from 'moralis/types/generated/web3Api';
@@ -17,9 +17,11 @@ const { TextArea } = Input;
 const ipfsHostUrl = 'https://ipfs.infura.io:5001/api/v0';
 const client = (ipfsHttpClient as any)(ipfsHostUrl);
 
+const { Option } = Select;
+
 function CreateNFT() {
 
-  const chainId = "4";
+  const [activeChainId, setactiveChainId] = useState("4");
   const tokenUri = "https://bafybeiet5jzl6mt7g575atqr2l4tso7w5orknjhgleakzix3mhdab5nijq.ipfs.infura-ipfs.io/";
   const contractAddress = "0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca";
   const [newNFT, setNewNFT] = useState<NFTMetadata>();
@@ -92,7 +94,7 @@ function CreateNFT() {
   }
 
   const loadNFTs = async () => {
-    const chainConfig = new Chain({...CONFIG_CHAINS[chainId]});
+    const chainConfig = new Chain({...CONFIG_CHAINS[activeChainId]});
   
     setLoadingState(`Loading NFTs for ${chainConfig.getChainFullName()}`);
     const options = {
@@ -100,7 +102,7 @@ function CreateNFT() {
       // Types of property 'chain' are incompatible.
       // Type 'string' is not assignable to type '"rinkeby" | "eth" | "0x1" | "ropsten" | "0x3" | ... N more ... |
       // see: https://bobbyhadz.com/blog/typescript-type-string-is-not-assignable-to-type
-      chain: `0x${(Number.parseInt(chainId)).toString(16)}` as components["schemas"]["chainList"],
+      chain: `0x${(Number.parseInt(activeChainId)).toString(16)}` as components["schemas"]["chainList"],
       address: contractAddress,
     };
     let data;
@@ -124,7 +126,7 @@ function CreateNFT() {
           name,
           description,
           image,
-          chainId: chainId,
+          chainId: activeChainId,
         }
         return item
       }));
@@ -134,12 +136,37 @@ function CreateNFT() {
     setNfts(items);
 
   }
-
+  const activeChain =  CONFIG_CHAINS[activeChainId];
   return (
     <div className='container card'>
         {loadingState?.toLowerCase().includes("loading") && <Spin size="large"  tip={loadingState}/>}
         <h1>
             CreateNFT
+
+            <p>
+          Create NFT on the following chains:
+        </p>
+        <Select
+          mode="tags"
+          allowClear
+          className="mb-3"
+          style={{ width: '100%' }}
+          placeholder="Select chains"
+          defaultValue={["4"]}
+          onChange={(values) => setactiveChainId(values[0])}
+          optionLabelProp="label"
+        >
+          {Object.values(CONFIG_CHAINS).map (chainConfig => (
+            <Option value={chainConfig.CHAIN_ID} label={chainConfig.CHAIN_NAME} key={chainConfig.CHAIN_ID}>
+                {chainConfig.CHAIN_NAME}
+                <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
+          </Option>
+          ))}
+        </Select>
+        Selected: 
+
+        {activeChain.CHAIN_NAME}
+        <img src={activeChain.LOGO_URL} alt={activeChain.CHAIN_NAME} width={50} />
 
             <Input 
                 placeholder="Token ID"
