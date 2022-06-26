@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.3;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -13,7 +12,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 // https://hardhat.org/tutorial/debugging-with-hardhat-network
 
 import "hardhat/console.sol";
-
+import "./ERC721.sol";
 
 /**
  * @title Full ERC721 Token
@@ -22,7 +21,7 @@ import "hardhat/console.sol";
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
 
-contract ERC721Harbeger is ERC721URIStorage, ERC165Storage {
+contract ERC721Harbeger is ERC721Custom, ERC165Storage {
     using SafeMath for uint256;
     using Address for address;
     using Counters for Counters.Counter;
@@ -63,7 +62,7 @@ contract ERC721Harbeger is ERC721URIStorage, ERC165Storage {
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
     constructor(string memory name_, string memory symbol_)
-    ERC721(name_, symbol_) {}
+    ERC721Custom(name_, symbol_) {}
 
     /**
      * @dev Gets the balance of the specified address.
@@ -293,7 +292,7 @@ contract ERC721Harbeger is ERC721URIStorage, ERC165Storage {
      * @dev See {IERC165-supportsInterface}.
      */
     function supportsInterface(bytes4 interfaceId) 
-    public view virtual override(ERC165Storage, ERC721) returns (bool) {
+    public view virtual override(ERC165Storage, ERC721Custom) returns (bool) {
         return
             interfaceId == type(IERC721).interfaceId ||
             super.supportsInterface(interfaceId);
