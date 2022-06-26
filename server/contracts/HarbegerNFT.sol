@@ -20,8 +20,8 @@ contract HarbegerNFT is ERC721ERC721HarbegerEnumerable {
   uint32 private constant TAX_DENOMINATOR = 10000;
   
   // TAX_NUMERATOR and TAX_INTERVAL should be configurable values
-  uint32 private constant TAX_NUMERATOR = 100; // 1%
-  uint32 private constant TAX_INTERVAL = 1 minutes;
+  uint32 private constant TAX_NUMERATOR = 250; // 2.5%
+  uint32 private constant TAX_INTERVAL = 1 seconds;
 
   // Mapping from creator to list of token IDs
   mapping(address => uint[]) private _createdTokens;
@@ -35,7 +35,7 @@ contract HarbegerNFT is ERC721ERC721HarbegerEnumerable {
   mapping(uint => uint) public prices;
   mapping(uint => uint) public paidThru;
 
-  constructor () ERC721ERC721HarbegerEnumerable("__CONTRACT_NAME__", "__CONTRACT_SYMBOL__") {}
+  constructor () ERC721ERC721HarbegerEnumerable("Science IP", "IPNFT") {}
   /**
   * @dev Throws if called by any account other than the owner of a tokenId.
   */

@@ -2,8 +2,8 @@ import { ethers } from "ethers";
 import { CONFIG_CHAINS } from "./config";
 import { NFTContract } from "./models/NFTContract"
 import { getAccount, getProvider } from "./utils/network-utils";
-import HarbegerNFT from "./artifacts/contracts/HarbegerNFT.template.sol/HarbegerNFT.json";
-import { createSmartContract } from "./create-smart-contract";
+import HarbegerNFT from "./artifacts/contracts/HarbegerNFT.sol/HarbegerNFT.json";
+import { contractSettings } from "./create-smart-contract";
 
 
 export const deploySmartContract = async (contract: NFTContract) => {
@@ -36,15 +36,4 @@ export const deploySmartContract = async (contract: NFTContract) => {
   console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${blockExplorerURL}`);
 }
 
-
-const contractSettings: NFTContract = {
-    "name": "Science IP",
-    "symbol": "IPNFT",
-    "harbegerTax": {
-        percentage: 2.5, 
-        frequency: "1 seconds"
-    },
-    "chainId": 4
-}
-createSmartContract(contractSettings);
-// deploySmartContract(contractSettings);
+deploySmartContract(contractSettings);

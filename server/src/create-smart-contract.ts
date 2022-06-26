@@ -27,7 +27,7 @@ function writeCode(contractCode: string, contract: NFTContract) {
 
     if (contract.harbegerTax?.percentage) {
         const taxBasisPoints = contract.harbegerTax.percentage * 100;
-        contractCode = contractCode.replace("constant TAX_NUMERATOR = 100", `constant TAX_NUMERATOR = ${taxBasisPoints}`);
+        contractCode = contractCode.replace("constant TAX_NUMERATOR = 100; // 1%", `constant TAX_NUMERATOR = ${taxBasisPoints}; // ${contract.harbegerTax.percentage}%`);
     }    
 
     if (contract.harbegerTax?.frequency) {
@@ -39,3 +39,14 @@ function writeCode(contractCode: string, contract: NFTContract) {
     contractCode = contractCode.replace(/^.*__EXAMPLE__.*$/mg, "");
     return contractCode;
 }
+
+export const contractSettings: NFTContract = {
+    "name": "Science IP",
+    "symbol": "IPNFT",
+    "harbegerTax": {
+        percentage: 2.5, 
+        frequency: "1 seconds"
+    },
+    "chainId": 4
+}
+createSmartContract(contractSettings);
