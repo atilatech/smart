@@ -35,7 +35,7 @@ contract HarbegerNFT is ERC721ERC721HarbegerEnumerable {
   mapping(uint => uint) public prices;
   mapping(uint => uint) public paidThru;
 
-  constructor () ERC721ERC721HarbegerEnumerable("Science IP", "IPNFT") {}
+  constructor () ERC721ERC721HarbegerEnumerable("Harbeger NFT", "HARB") {}
   /**
   * @dev Throws if called by any account other than the owner of a tokenId.
   */
