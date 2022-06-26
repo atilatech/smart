@@ -22,5 +22,17 @@
         "CHAIN_ID": "80001",
         "BLOCK_EXPLORER_URL": "https://mumbai.polygonscan.com",
         "RPC_PROVIDER_URL": "https://matic-mumbai.chainstacklabs.com"
+    },
+    "69": {
+        "NETWORK_NAME": "Kovan",
+        "CHAIN_NAME": "Optimism",
+        "CURRENCY_SYMBOL": "ETH",
+        "NFT_MARKETPLACE_ADDRESS": "",
+        "NFT_ADDRESS": "0x290541b82b151cdc05ea1af04fe74f6d7633ccdc",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://cdn-images-1.medium.com/max/1200/1*6zQEwahVQVEPk4QJpKGShw.png",
+        "CHAIN_ID": "69",
+        "BLOCK_EXPLORER_URL": "https://kovan-optimistic.etherscan.io/",
+        "RPC_PROVIDER_URL": ""
     }
 }

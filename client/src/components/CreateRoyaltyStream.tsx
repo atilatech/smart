@@ -18,6 +18,7 @@ async function createNewFlow(recipient: any, flowRate: any) {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const signer = provider.getSigner();
+  const gasPrice = provider.getGasPrice();
 
   const chainId = await window.ethereum.request({ method: "eth_chainId" });
   const sf = await Framework.create({
@@ -32,8 +33,9 @@ async function createNewFlow(recipient: any, flowRate: any) {
     const createFlowOperation = sf.cfaV1.createFlow({
       receiver: recipient,
       flowRate: flowRate,
-      superToken: DAIx
-      // userData?: string
+      superToken: DAIx,
+      // userData?: string,
+      overrides:{gasPrice},
     });
 
     console.log("Creating your stream...");
@@ -59,8 +61,8 @@ async function createNewFlow(recipient: any, flowRate: any) {
   }
 }
 
-export const CreateRoyaltyStream = () => {
-  const [recipient, setRecipient] = useState("");
+export const CreateRoyaltyStream = ({defaultRecipient }: {defaultRecipient: string}) => {
+  const [recipient, setRecipient] = useState(defaultRecipient);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [flowRate, setFlowRate] = useState("");
   const [flowRateDisplay, setFlowRateDisplay] = useState("");

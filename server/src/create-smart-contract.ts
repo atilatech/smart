@@ -47,6 +47,6 @@ export const contractSettings: NFTContract = {
         percentage: 2.5, 
         frequency: "1 seconds"
     },
-    "chainId": 80001
+    "chainId": 69
 }
 createSmartContract(contractSettings);

@@ -262,7 +262,7 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
                     </Button>
 
                     {isCreateRoyaltyStream && 
-                        <CreateRoyaltyStream />
+                        <CreateRoyaltyStream defaultRecipient={nft.harbegerTax.owner}/>
                     }
                     </>
                 </li>
