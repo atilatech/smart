@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.3;
 
-import "./ERC721Enumerable.sol";
+import "./ERC721HarbegerEnumerable.sol";
 
 // When running your contracts and tests on Hardhat Network 
 // you can print logging messages and contract variables calling console.log() from your Solidity code. 

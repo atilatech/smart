@@ -12,6 +12,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 // https://hardhat.org/tutorial/debugging-with-hardhat-network
 
 import "hardhat/console.sol";
+import "./ERC721URIStorage.sol";
 import "./ERC721.sol";
 
 /**
@@ -21,7 +22,7 @@ import "./ERC721.sol";
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
 
-contract ERC721Harbeger is ERC721Custom, ERC165Storage {
+contract ERC721Harbeger is ERC721CustomURIStorage, ERC165Storage {
     using SafeMath for uint256;
     using Address for address;
     using Counters for Counters.Counter;
