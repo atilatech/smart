@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Chain } from "./Chain";
 import { NFTMetadata } from "./NFT";
 
@@ -61,11 +61,11 @@ export class MarketplaceDisplay {
         return (
             <div>
                 {marketPlaces.map(marketPlace => (
-                    <>
+                    <Fragment key={marketPlace.name}>
                     <a href={marketPlace.getListingUrl(chain,nft)} target="_blank" rel="noreferrer">
                         View NFT on {marketPlace.name}
                     </a><br/>
-                    </>
+                    </Fragment>
                 ) )}
             </div>
             

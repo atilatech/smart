@@ -8,6 +8,7 @@ export interface NFTMetadata {
     chainId?: string,
     tokenId?: string,
     tokenURI?: string,
+    address?: string,
     // following properties only exist if the NFT is listed for sale
     price?: BigNumber,
     seller?: string,

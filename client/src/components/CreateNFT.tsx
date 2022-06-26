@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import HarbegerNFT from "../artifacts/contracts/HarbegerNFT.sol/HarbegerNFT.json";
 import { ethers } from "ethers";
 import Web3Modal from 'web3modal';
-import { Button, Spin } from 'antd';
+import { Button, Col, Input, Row, Spin } from 'antd';
 import Moralis from 'moralis';
 import { Chain } from '../models/Chain';
 import { components } from 'moralis/types/generated/web3Api';
@@ -10,24 +10,81 @@ import { CONFIG_CHAINS } from '../config';
 import axios from 'axios';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
+import { create as ipfsHttpClient } from 'ipfs-http-client';
+
+const { TextArea } = Input;
+
+const ipfsHostUrl = 'https://ipfs.infura.io:5001/api/v0';
+const client = (ipfsHttpClient as any)(ipfsHostUrl);
 
 function CreateNFT() {
 
   const chainId = "4";
   const tokenUri = "https://bafybeiet5jzl6mt7g575atqr2l4tso7w5orknjhgleakzix3mhdab5nijq.ipfs.infura-ipfs.io/";
   const contractAddress = "0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca";
-  const [nfts, setNfts] = useState<Array<any>>([]);
+  const [newNFT, setNewNFT] = useState<NFTMetadata>();
+  const [fileUrl, setFileUrl] = useState<string|null>(null)
+  const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '', tokenId: 0 });
+  const [error, setError] = useState("");
+  const [nfts, setNfts] = useState<Array<NFTMetadata>>([]);
   const [loadingState, setLoadingState] = useState('not-loaded');
+  const [nftMetadataUrl, setNftMetadataUrl] = useState("");
 
 
-  const createToken = async () => {
+  async function onChange(e: any) {
+    const file = e.target.files[0];
+    // setFileUrl("https://atila.ca/static/media/atila-upway-logo-gradient-circle-border.bfe05867.png");
+    // return;
+    try {
+      const added = await client.add(
+        file,
+        {
+          progress: (progressValue: any) => console.log(`received: ${progressValue}`)
+        }
+      )
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`
+      setFileUrl(url)
+    } catch (error) {
+      console.log('Error uploading file: ', error);
+      setError(JSON.stringify(error));
+    }  
+  }
+  async function getNFTMetadataUrl () {
+
+    if (nftMetadataUrl) {
+      return nftMetadataUrl;
+    }
+    try {
+      let url;
+      const { name, description } = formInput
+      if (!name || !description || !fileUrl) return
+        /* first, upload to IPFS */
+        const data = JSON.stringify({
+          name, description, image: fileUrl
+        })
+
+        const added = await client.add(data)
+        url = `https://ipfs.infura.io/ipfs/${added.path}`
+        // url = "https://bafybeicjitpyvkvqrm63pnfwv2e7wxkqb6meg3vemz6s7cyc4bpcuaz44y.ipfs.infura-ipfs.io/"
+        /* after file is uploaded to IPFS, pass the URL to save it on Network */
+        setNftMetadataUrl(url);
+        return url;
+
+    } catch (error) {
+      console.log('Error uploading file: ', error)
+    } 
+
+  };
+
+  const mintNFT = async () => {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)    
-    const signer = provider.getSigner()
+    const signer = provider.getSigner();
+    const url = await getNFTMetadataUrl();
 
     let nftContract = new ethers.Contract(contractAddress, HarbegerNFT.abi, signer);
-    let mintTransactionPromise = await nftContract.mint(1, tokenUri);
+    let mintTransactionPromise = await nftContract.mint(formInput.tokenId, url);
     let mintTransaction = await mintTransactionPromise.wait();
 
     console.log({mintTransaction, mintTransactionPromise});
@@ -84,7 +141,32 @@ function CreateNFT() {
         <h1>
             CreateNFT
 
-            <Button onClick={createToken}>
+            <Input 
+                placeholder="Token ID"
+                type="number"
+                onChange={e => updateFormInput({ ...formInput, tokenId: Number.parseInt(e.target.value) })}
+            />
+
+            <Input 
+                placeholder="Name"
+                onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
+            />
+            <TextArea
+                placeholder="Description"
+                onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
+            />
+            <Input
+                type="file"
+                name="NFT"
+                className="my-4"
+                onChange={onChange}
+            />
+            {
+              fileUrl && (
+                <img className="rounded mt-4" width="350" src={fileUrl} alt="User NFT Upload" />
+              )
+            }
+            <Button onClick={mintNFT}>
                 Create NFT
             </Button>
         </h1>
@@ -103,9 +185,19 @@ function CreateNFT() {
 
             <hr/>
 
-            {nfts.map(nft => (
-                <NFTCard nft={nft} />
-            ))}
+            <Row gutter={[24,24]}>
+            {
+              nfts.map((nft: NFTMetadata, i: number) => {
+  
+                return(
+                  <Col md={8} sm={24} key={nft.tokenId}>
+                    <NFTCard nft={nft} />
+                  </Col>
+                )
+  
+              })
+            }
+        </Row>
 
         </div>
     </div>
