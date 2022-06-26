@@ -7,7 +7,7 @@ import { Button } from 'antd';
 function CreateNFT() {
 
   const tokenUri = "https://bafybeiet5jzl6mt7g575atqr2l4tso7w5orknjhgleakzix3mhdab5nijq.ipfs.infura-ipfs.io/";
-  const contractAddress = "0xe5f9c0a000bad3188fdede235b6537655139e9a9";
+  const contractAddress = "0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca";
 
 
   const createToken = async () => {
