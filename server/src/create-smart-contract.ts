@@ -41,12 +41,12 @@ function writeCode(contractCode: string, contract: NFTContract) {
 }
 
 export const contractSettings: NFTContract = {
-    "name": "Science IP",
-    "symbol": "IPNFT",
+    "name": "Harbeger NFT",
+    "symbol": "HARB",
     "harbegerTax": {
         percentage: 2.5, 
         frequency: "1 seconds"
     },
-    "chainId": 4
+    "chainId": 80001
 }
 createSmartContract(contractSettings);
