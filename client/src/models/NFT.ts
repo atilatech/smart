@@ -14,4 +14,11 @@ export interface NFTMetadata {
     seller?: string,
     itemId?: string,
     owner?: string,
+    harbegerTax?: {
+        creator: string,
+        owner: string,
+        taxBalance: BigNumber,
+        price: BigNumber,
+        canReclaim: boolean,
+    }
 }

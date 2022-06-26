@@ -1,23 +1,158 @@
 import { useState } from 'react'
-import { AlertProps, Tag } from 'antd';
+import { Alert, AlertProps, Button, Spin, Tag } from 'antd';
+import HarbegerNFT from "../artifacts/contracts/HarbegerNFT.sol/HarbegerNFT.json";
 import { CONFIG_CHAINS } from '../config';
 import { NFTMetadata } from '../models/NFT';
 
 // import "./NFTCard.scss";
 import { BigNumber, ethers } from 'ethers';
 import { MarketplaceDisplay } from '../models/Marketplace';
+import CryptoPrice from './CryptoPrice';
+import CryptoPriceEdit from './CryptoPriceEdit';
 
-function NFTCard({nft}: {nft: NFTMetadata}) {
+import Web3Modal from 'web3modal';
+
+function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
 
     const [listPrice, setListPrice] = useState<BigNumber>(BigNumber.from(0));
+    const [nft, setNft] = useState<NFTMetadata>(defaultNft);
     const [showEditListPrice, setShowEditListPrice] = useState(false);
     const { chainId } = nft;
+    let signer: ethers.providers.JsonRpcSigner;
     const [responseMessage, setResponseMessage] = useState<{[key: string]: {message: string, type: AlertProps["type"], loading?: boolean}}>({});
 
     const activeChain = CONFIG_CHAINS[chainId!];
 
     console.log({activeChain, chainId, CONFIG_CHAINS});
     const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/${activeChain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
+
+    const getSigner = async () => {
+        if(signer) {
+            return signer
+        } else {
+            const web3Modal = new Web3Modal()
+            const connection = await web3Modal.connect()
+            const provider = new ethers.providers.Web3Provider(connection)    
+            return provider.getSigner()
+        }
+    }
+
+    const setPrice = async  () => {
+
+        try {
+        
+        /* then list the item for sale on the marketplace */
+        signer = await getSigner()
+
+        const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
+
+        await nftContract.setPrice(nft.tokenId, listPrice);
+        
+        const signerAddress = await signer.getAddress();
+
+        setResponseMessage({
+            ...responseMessage,
+            setPrice: {
+               type: "success",
+               message: "Succesfully listed market item for sale",
+             }
+             });
+        } catch (error: any) {
+            setResponseMessage({
+                ...responseMessage,
+                setPrice: {
+                   type: "error",
+                   message: error?.data?.message||JSON.stringify(error),
+                 }
+                 });
+        }
+    };
+
+    const getHarbegerInfo = async  () => {
+
+        try {
+        
+        /* then list the item for sale on the marketplace */
+        signer = await getSigner()
+
+        const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
+
+        const [creator, owner, taxBalance, price, _canReclaim] = await nftContract.info(nft.tokenId);
+
+        console.log({creator, owner, taxBalance, price, _canReclaim});
+        console.log("taxBalance, price", ethers.utils.formatEther(taxBalance), ethers.utils.formatUnits(price));
+        setNft({
+            ...nft,
+            harbegerTax: {creator, owner, taxBalance, price, canReclaim: _canReclaim}
+        });
+
+        setResponseMessage({
+            ...responseMessage,
+            getHarbegerInfo: {
+               type: "success",
+               message: "Succesfully Retrieved Harbeger info",
+             }
+             });
+        } catch (error: any) {
+            setResponseMessage({
+                ...responseMessage,
+                setPrice: {
+                   type: "error",
+                   message: error?.data?.message||JSON.stringify(error),
+                 }
+                 });
+        }
+    };
+
+    const buyNFT = async  () => {
+
+        if (!nft.price) {
+            setResponseMessage({
+                ...responseMessage,
+                buyNFT: {
+                   type: "error",
+                   message: "This NFT does not have a price. It's unavailable for purchase.",
+                   loading: true,
+                 }
+                 });
+                 return;
+        }
+        try {
+
+        
+        /* then list the item for sale on the marketplace */
+        signer = await getSigner()
+
+        setResponseMessage({
+            ...responseMessage,
+            buyNFT: {
+               type: "info",
+               message: "Completing purchase",
+               loading: true,
+             }
+             });
+        const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, HarbegerNFT.abi, signer);
+        const { price } = nft;
+
+        await marketContract.createMarketSale(activeChain.NFT_ADDRESS, nft.itemId, { value: price});
+        setResponseMessage({
+            ...responseMessage,
+            buyNFT: {
+               type: "success",
+               message: "Succesfully purchased item",
+             }
+             });
+        } catch(error: any) {
+            setResponseMessage({
+                ...responseMessage,
+                buyNFT: {
+                   type: "error",
+                   message: error.message || error?.data?.message||JSON.stringify(error),
+                 }
+                 });
+        }
+
+    };
 
     return (
         <div className="NFTCard card shadow">
@@ -30,6 +165,65 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             <p>{nft.description}</p>
         </div>
         <hr/>
+
+        <div className="actions">
+            <>
+            {showEditListPrice ? 
+            <>
+                <CryptoPriceEdit currencySymbol={activeChain.CURRENCY_SYMBOL} onPriceChange={({cryptoPrice}) => {
+                    if(cryptoPrice) {
+                        setListPrice(cryptoPrice);
+                    }
+                }} />
+                <Button onClick={setPrice} className="mb-3">
+                    List for Sale
+                </Button>
+            </>
+            :
+                <Button onClick={()=>setShowEditListPrice(true)} className="mb-3">
+                    List for Sale
+                </Button>
+            }
+             <br/>
+            </>
+
+                <Button onClick={getHarbegerInfo} className="mb-3">
+                    Show Royalties Info
+                </Button>
+
+            {nft.harbegerTax && 
+            <ol>
+                <li>
+                    <>
+                    Price: <CryptoPrice cryptoPrice={nft.harbegerTax.price as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
+                    <Button onClick={buyNFT}>
+                        Buy
+                    </Button>
+                    </>
+                </li>
+                <li>
+                    <>
+                    Royalties Owed: <CryptoPrice cryptoPrice={nft.harbegerTax.taxBalance as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
+                    </>
+                </li>
+            </ol>
+            }
+
+
+            {Object.values(responseMessage).filter(response=>response.message).map(response => (
+            <Alert
+                key={response.message}
+                type={response.type}
+                message={<>
+                {response.message}{' '}
+                {response.loading && <Spin />}
+                </>
+                }
+                style={{maxWidth: '300px'}}
+                className="my-2"
+                />
+            ))}
+        </div>
         <hr/>
 
         <div className="mb-2 metadata">
