@@ -1,24 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import NFT from './scenes/NFT';
+import Moralis from 'moralis';
+import { REACT_APP_MORALIS_SERVER_URL, REACT_APP_MORALIS_APP_ID } from './config';
+
+
+
+// TODO move this too App.tsx so it doesn't have to call oral
+Moralis.start({ serverUrl: REACT_APP_MORALIS_SERVER_URL, appId: REACT_APP_MORALIS_APP_ID });
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NFT />
     </div>
   );
 }
