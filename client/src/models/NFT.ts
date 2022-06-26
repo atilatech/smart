@@ -17,7 +17,8 @@ export interface NFTMetadata {
     harbegerTax?: {
         creator: string,
         owner: string,
-        taxBalance: BigNumber,
+        taxOwed: BigNumber,
+        taxToCollect: BigNumber,
         price: BigNumber,
         canReclaim: boolean,
     }

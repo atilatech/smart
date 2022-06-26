@@ -77,17 +77,17 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
 
         const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
 
-        const [creator, owner, taxes, price, _canReclaim] = await nftContract.info(nft.tokenId);
-        const taxBalance = await nftContract.taxOwed(nft.tokenId);
+        const [creator, owner, taxToCollect, price, _canReclaim] = await nftContract.info(nft.tokenId);
+        const taxOwed = await nftContract.taxOwed(nft.tokenId);
 
-        console.log({creator, owner, taxBalance, taxes, price, _canReclaim});
+        console.log({creator, owner, taxBalance: taxOwed, taxToCollect, price, _canReclaim});
         console.log("taxBalance, price, taxes",
-         ethers.utils.formatUnits(taxBalance),
+         ethers.utils.formatUnits(taxOwed),
          ethers.utils.formatUnits(price),
-         ethers.utils.formatUnits(taxes));
+         ethers.utils.formatUnits(taxToCollect));
         setNft({
             ...nft,
-            harbegerTax: {creator, owner, taxBalance, price, canReclaim: _canReclaim}
+            harbegerTax: {creator, owner, taxOwed, price, canReclaim: _canReclaim, taxToCollect}
         });
 
         setResponseMessage({
@@ -148,7 +148,7 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
 
             const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
             // multiply by 10% to account for change in taxOwed if high frequency
-            await nftContract.deposit(nft.tokenId, { value: nft.harbegerTax?.taxBalance.mul( 110 ).div(100) });
+            await nftContract.deposit(nft.tokenId, { value: nft.harbegerTax?.taxOwed.mul( 110 ).div(100) });
     
             setResponseMessage({
                 ...responseMessage,
@@ -161,6 +161,36 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
                 setResponseMessage({
                     ...responseMessage,
                     setPrice: {
+                       type: "error",
+                       message: error?.data?.message||JSON.stringify(error),
+                     }
+                     });
+            }
+
+    };
+
+    const collectRoyalties = async  () => {
+
+        try {
+        
+            /* then list the item for sale on the marketplace */
+            signer = await getSigner()
+
+            const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
+            // multiply by 10% to account for change in taxOwed if high frequency
+            await nftContract.collect(nft.tokenId);
+    
+            setResponseMessage({
+                ...responseMessage,
+                collectRoyalties: {
+                   type: "success",
+                   message: "Succesfully collected your royalties!",
+                 }
+                 });
+            } catch (error: any) {
+                setResponseMessage({
+                    ...responseMessage,
+                    collectRoyalties: {
                        type: "error",
                        message: error?.data?.message||JSON.stringify(error),
                      }
@@ -218,10 +248,18 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
                 </li>
                 <li>
                     <>
-                    Royalties Owed: <CryptoPrice cryptoPrice={nft.harbegerTax.taxBalance as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
+                    Royalties Owed: <CryptoPrice cryptoPrice={nft.harbegerTax.taxOwed as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
 
-                    <Button onClick={payRoyalties}>
+                    <Button onClick={payRoyalties} className="mb-3">
                         Pay Royalties
+                    </Button>
+                    </>
+                </li>
+                <li>
+                    <>
+                    Available Royalties: <CryptoPrice cryptoPrice={nft.harbegerTax.taxToCollect as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
+                    <Button onClick={collectRoyalties}>
+                        Collect Royalties
                     </Button>
                     </>
                 </li>
