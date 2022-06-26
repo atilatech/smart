@@ -77,10 +77,14 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
 
         const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
 
-        const [creator, owner, taxBalance, price, _canReclaim] = await nftContract.info(nft.tokenId);
+        const [creator, owner, taxes, price, _canReclaim] = await nftContract.info(nft.tokenId);
+        const taxBalance = await nftContract.taxOwed(nft.tokenId);
 
-        console.log({creator, owner, taxBalance, price, _canReclaim});
-        console.log("taxBalance, price", ethers.utils.formatEther(taxBalance), ethers.utils.formatUnits(price));
+        console.log({creator, owner, taxBalance, taxes, price, _canReclaim});
+        console.log("taxBalance, price, taxes",
+         ethers.utils.formatUnits(taxBalance),
+         ethers.utils.formatUnits(price),
+         ethers.utils.formatUnits(taxes));
         setNft({
             ...nft,
             harbegerTax: {creator, owner, taxBalance, price, canReclaim: _canReclaim}
@@ -106,51 +110,62 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
 
     const buyNFT = async  () => {
 
-        if (!nft.price) {
-            setResponseMessage({
-                ...responseMessage,
-                buyNFT: {
-                   type: "error",
-                   message: "This NFT does not have a price. It's unavailable for purchase.",
-                   loading: true,
-                 }
-                 });
-                 return;
-        }
         try {
-
         
-        /* then list the item for sale on the marketplace */
-        signer = await getSigner()
-
-        setResponseMessage({
-            ...responseMessage,
-            buyNFT: {
-               type: "info",
-               message: "Completing purchase",
-               loading: true,
-             }
-             });
-        const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, HarbegerNFT.abi, signer);
-        const { price } = nft;
-
-        await marketContract.createMarketSale(activeChain.NFT_ADDRESS, nft.itemId, { value: price});
-        setResponseMessage({
-            ...responseMessage,
-            buyNFT: {
-               type: "success",
-               message: "Succesfully purchased item",
-             }
-             });
-        } catch(error: any) {
+            /* then list the item for sale on the marketplace */
+            signer = await getSigner()
+    
+            const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
+    
+            await nftContract.buy(nft.tokenId, nft.harbegerTax?.price, { value: nft.harbegerTax?.price});
+    
             setResponseMessage({
                 ...responseMessage,
-                buyNFT: {
-                   type: "error",
-                   message: error.message || error?.data?.message||JSON.stringify(error),
+                setPrice: {
+                   type: "success",
+                   message: "Succesfully listed market item for sale",
                  }
                  });
-        }
+            } catch (error: any) {
+                setResponseMessage({
+                    ...responseMessage,
+                    setPrice: {
+                       type: "error",
+                       message: error?.data?.message||JSON.stringify(error),
+                     }
+                     });
+            }
+
+    };
+
+
+    const payRoyalties = async  () => {
+
+        try {
+        
+            /* then list the item for sale on the marketplace */
+            signer = await getSigner()
+
+            const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, HarbegerNFT.abi, signer);
+            // multiply by 10% to account for change in taxOwed if high frequency
+            await nftContract.deposit(nft.tokenId, { value: nft.harbegerTax?.taxBalance.mul( 110 ).div(100) });
+    
+            setResponseMessage({
+                ...responseMessage,
+                setPrice: {
+                   type: "success",
+                   message: "Succesfully listed market item for sale",
+                 }
+                 });
+            } catch (error: any) {
+                setResponseMessage({
+                    ...responseMessage,
+                    setPrice: {
+                       type: "error",
+                       message: error?.data?.message||JSON.stringify(error),
+                     }
+                     });
+            }
 
     };
 
@@ -204,6 +219,10 @@ function NFTCard({nft: defaultNft}: {nft: NFTMetadata}) {
                 <li>
                     <>
                     Royalties Owed: <CryptoPrice cryptoPrice={nft.harbegerTax.taxBalance as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
+
+                    <Button onClick={payRoyalties}>
+                        Pay Royalties
+                    </Button>
                     </>
                 </li>
             </ol>

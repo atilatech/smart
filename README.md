@@ -37,3 +37,8 @@ npx hardhat verify --network rinkeby 0xb275e2ebbd2d381390ad3c229df0ec3dd0e9edf5 
 `0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca` or `0x562fb8007be0fbd2c6be21fc557a45d89f8ba31a`
 https://rinkeby.etherscan.io/address/0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca
 https://rinkeby.etherscan.io/address/0x562fb8007be0fbd2c6be21fc557a45d89f8ba31a
+
+
+- Call `_transferFrom` function when token is transferred (`_changeOwner`)
+- Do we have to re-implement all the OpenZeppelin ERC721, is there way to ovveride non-virtual
+- making the tax frequency too soon makes it harder to pay taxes before it increases again
