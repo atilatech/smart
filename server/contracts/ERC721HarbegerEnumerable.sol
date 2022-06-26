@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-import "./ERC721.sol";
+import "./ERC721Harbeger.sol";
 
 /**
  * @title ERC-721 Non-Fungible Token with optional enumeration extension logic
