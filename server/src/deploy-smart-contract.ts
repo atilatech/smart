@@ -7,7 +7,7 @@ import { createSmartContract } from "./create-smart-contract";
 
 
 export const deploySmartContract = async (contract: NFTContract) => {
-    const { chainId, owner } = contract;
+    const { chainId } = contract;
 
   if (!(chainId in CONFIG_CHAINS)) {
     let chainsForPrinting: any = {};
@@ -24,21 +24,8 @@ export const deploySmartContract = async (contract: NFTContract) => {
   const gasPrice = await provider.getGasPrice();
   let NFT;
   NFT = new ethers.ContractFactory(NFTInterface.abi, NFTInterface.bytecode, account);
-
-  let { royaltyRecipient, royaltyFeePercentage } = contract.royalty!;
-
-  if (!royaltyFeePercentage) {
-    royaltyFeePercentage = 10
-  }
-
-  //convert from decimal to basis points
-  royaltyFeePercentage = Number.parseInt((royaltyFeePercentage * 100).toString());
-
-  if (!royaltyRecipient) {
-    royaltyRecipient = contract.owner;
-  }
   
-  const nft = await NFT.deploy(owner, royaltyRecipient, royaltyFeePercentage, {gasPrice});
+  const nft = await NFT.deploy({gasPrice});
   await nft.deployed();
 
   contract.address = nft.address.toLowerCase();
@@ -50,16 +37,14 @@ export const deploySmartContract = async (contract: NFTContract) => {
 }
 
 
-const contractSettings = {
-    "name": "Tomiwa",
-    "symbol": "TA",
-    "maxSupply": 99,
-    "owner": "0x27f7e8d7c63c414eae2bb07e1a9b9057a1d382cf",
-    "royalty": {
-        "royaltyRecipient": "0x27f7e8d7c63c414eae2bb07e1a9b9057a1d382cf", 
-        "royaltyFeePercentage": 2.5
+const contractSettings: NFTContract = {
+    "name": "Science IP",
+    "symbol": "IPNFT",
+    "harbegerTax": {
+        percentage: 2.5, 
+        frequency: "1 seconds"
     },
     "chainId": 4
 }
-// createSmartContract(contractSettings);
-deploySmartContract(contractSettings);
+createSmartContract(contractSettings);
+// deploySmartContract(contractSettings);

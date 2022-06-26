@@ -1,14 +1,28 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.3;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
-contract ERC721 is ERC165Storage, IERC721 {
+// When running your contracts and tests on Hardhat Network 
+// you can print logging messages and contract variables calling console.log() from your Solidity code. 
+// https://hardhat.org/tutorial/debugging-with-hardhat-network
+
+import "hardhat/console.sol";
+
+
+/**
+ * @title Full ERC721 Token
+ * This implementation includes all the required and some optional functionality of the ERC721 standard
+ * Moreover, it includes approve all functionality using operator terminology
+ * @dev see https://eips.ethereum.org/EIPS/eip-721
+ */
+
+contract ERC721Harbeger is ERC721URIStorage, ERC165Storage {
     using SafeMath for uint256;
     using Address for address;
     using Counters for Counters.Counter;
@@ -45,10 +59,11 @@ contract ERC721 is ERC165Storage, IERC721 {
      */
     bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
 
-    constructor () {
-        // register the supported interfaces to conform to ERC721 via ERC165
-        _registerInterface(_INTERFACE_ID_ERC721);
-    }
+    /**
+     * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
+     */
+    constructor(string memory name_, string memory symbol_)
+    ERC721(name_, symbol_) {}
 
     /**
      * @dev Gets the balance of the specified address.
@@ -170,7 +185,7 @@ contract ERC721 is ERC165Storage, IERC721 {
      * @param tokenId uint256 ID of the token to query the existence of
      * @return bool whether the token exists
      */
-    function _exists(uint256 tokenId) internal view returns (bool) {
+    function _exists(uint256 tokenId) override internal view returns (bool) {
         address owner = _tokenOwner[tokenId];
         return owner != address(0);
     }
@@ -182,7 +197,7 @@ contract ERC721 is ERC165Storage, IERC721 {
      * @return bool whether the msg.sender is approved for the given token ID,
      * is an operator of the owner, or is the owner of the token
      */
-    function _isApprovedOrOwner(address spender, uint256 tokenId) internal view returns (bool) {
+    function _isApprovedOrOwner(address spender, uint256 tokenId) override internal view returns (bool) {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
         address owner = ownerOf(tokenId);
         return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
@@ -194,7 +209,7 @@ contract ERC721 is ERC165Storage, IERC721 {
      * @param to The address that will own the minted token
      * @param tokenId uint256 ID of the token to be minted
      */
-    function _mint(address to, uint256 tokenId) internal {
+    function _mint(address to, uint256 tokenId) override internal {
         require(to != address(0), "ERC721: mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
 
@@ -227,7 +242,7 @@ contract ERC721 is ERC165Storage, IERC721 {
      * Reverts if the token does not exist.
      * @param tokenId uint256 ID of the token being burned
      */
-    function _burn(uint256 tokenId) internal {
+    function _burn(uint256 tokenId) override internal {
         _burn(ownerOf(tokenId), tokenId);
     }
 
@@ -264,7 +279,7 @@ contract ERC721 is ERC165Storage, IERC721 {
      * @return bool whether the call correctly returned the expected magic value
      */
     function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)
-        internal returns (bool)
+        override private returns (bool)
     {
         if (!to.isContract()) {
             return true;
@@ -272,6 +287,16 @@ contract ERC721 is ERC165Storage, IERC721 {
 
         bytes4 retval = IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, _data);
         return (retval == _ERC721_RECEIVED);
+    }
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) 
+    public view virtual override(ERC165Storage, ERC721) returns (bool) {
+        return
+            interfaceId == type(IERC721).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
     /**

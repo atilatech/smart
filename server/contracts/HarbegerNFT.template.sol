@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.3;
 
-import "./ERC721Full.sol";
+import "./ERC721Enumerable.sol";
 
-contract HarbegerNFT is ERC721Full {
+// When running your contracts and tests on Hardhat Network 
+// you can print logging messages and contract variables calling console.log() from your Solidity code. 
+// https://hardhat.org/tutorial/debugging-with-hardhat-network
+import "hardhat/console.sol";
+
+contract HarbegerNFT is ERC721ERC721HarbegerEnumerable {
   event Minted(uint indexed tokenId, address from);
   event Deposited(uint indexed tokenId, uint value, address from);
   event PriceUpdated(uint indexed tokenId, uint newPrice, address from);
@@ -30,7 +35,7 @@ contract HarbegerNFT is ERC721Full {
   mapping(uint => uint) public prices;
   mapping(uint => uint) public paidThru;
 
-  constructor () public ERC721Full("__CONTRACT_NAME", "__CONTRACT_SYMBOL__") {}
+  constructor () ERC721ERC721HarbegerEnumerable("__CONTRACT_NAME", "__CONTRACT_SYMBOL__") {}
   /**
   * @dev Throws if called by any account other than the owner of a tokenId.
   */
@@ -39,6 +44,8 @@ contract HarbegerNFT is ERC721Full {
       require(ownerOf(tokenId) == msg.sender, "Caller is not the token owner");
       _;
   }
+
+  
 
   /**
     * @dev Function to mint tokens. From ERC721MetadataMintable
@@ -58,7 +65,7 @@ contract HarbegerNFT is ERC721Full {
       // HTax parameters
       prices[tokenId] = 0;
       taxes[tokenId] = 0;
-      paidThru[tokenId] = now;
+      paidThru[tokenId] = block.timestamp;
 
       emit Minted(tokenId, creator);
       return true;
@@ -76,14 +83,14 @@ contract HarbegerNFT is ERC721Full {
 
     address previousOwner = _tokenOwner[tokenId];
     require(msg.sender != previousOwner, 'You are already the owner.');
-    address payable beneficiary = address(uint160(previousOwner));
+    address payable beneficiary = payable(address(uint160(previousOwner)));
     uint excessTaxes = taxes[tokenId]; // Refund excess taxes to previous owner
 
     // Change owner
     address newOwner = msg.sender;
     uint excessPaidAmount = paidAmount - latestPrice; // TODO: use SafeMath.sub()
     taxes[tokenId] = excessPaidAmount; // Excess paid is deposited as taxes
-    paidThru[tokenId] = now;
+    paidThru[tokenId] = block.timestamp;
     _changeOwner(tokenId, previousOwner, newOwner);
 
     // Interchangeable newPrice and paidAmount
@@ -102,19 +109,19 @@ contract HarbegerNFT is ERC721Full {
   // Forbid collection of collectibles with zero balances
   function collect(uint tokenId) public {
     uint owed = taxOwed(tokenId);
-    address payable beneficiary = address(uint160(creatorOf(tokenId)));
+    address payable beneficiary = payable(address(uint160(creatorOf(tokenId))));
     uint paid = taxes[tokenId];
 
     if (owed > paid) { // insufficient tax deposited
       taxes[tokenId] = 0;
       // Represent amount of taxes paid as a time
       // As each tax payment corresponds to tax time interval
-      paidThru[tokenId] += (now - paidThru[tokenId]) * paid / owed;
+      paidThru[tokenId] += (block.timestamp - paidThru[tokenId]) * paid / owed;
       emit Collected(tokenId, paid, msg.sender);
       beneficiary.transfer(paid);
     } else { // enough tax deposited
       taxes[tokenId] -= owed;
-      paidThru[tokenId] = now;
+      paidThru[tokenId] = block.timestamp;
       emit Collected(tokenId, owed, msg.sender);
       beneficiary.transfer(owed); // Pay creator
     }
@@ -128,7 +135,7 @@ contract HarbegerNFT is ERC721Full {
       // Reset price, tax balance, and taxes owed
       prices[tokenId] = 0;
       taxes[tokenId] = 0;
-      paidThru[tokenId] = now;
+      paidThru[tokenId] = block.timestamp;
 
       emit Reclaimed(tokenId, msg.sender);
     }
@@ -156,7 +163,7 @@ contract HarbegerNFT is ERC721Full {
     uint tokenPrice = prices[tokenId];
 
     return tokenPrice * TAX_NUMERATOR / TAX_DENOMINATOR
-    * (now - paidThru[tokenId])  / TAX_INTERVAL;
+    * (block.timestamp - paidThru[tokenId])  / TAX_INTERVAL;
   }
 
   function exists(uint tokenId) public view returns (bool) {

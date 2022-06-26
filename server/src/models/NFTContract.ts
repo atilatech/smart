@@ -1,14 +1,12 @@
 export interface NFTContract {
     name: string,
     symbol: string,
-    owner: string,
-    maxSupply?: number | null,
-    filePath?: string,
     chainId: string | number,
+    // the following variables become available after the contract has been deployed
     address?: string,
     blockExplorerUrl?: string,
-    royalty?: {
-        royaltyRecipient: string,
-        royaltyFeePercentage: number,
+    harbegerTax?: {
+        percentage: number,
+        frequency: string,
     } | null
 }
