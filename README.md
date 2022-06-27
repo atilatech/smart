@@ -8,7 +8,7 @@ Remember, [everything is art](#everything-is-art), so you can use this to tokeni
 
 ## About
 
-This project implements [Harberger Taxes](https://medium.com/@simondlr/what-is-harberger-tax-where-does-the-blockchain-fit-in-1329046922c6) using [NFTs](https://github.com/atilatech/smart/blob/4cacae1e5524f71f4c1c43ab0e50bdf7d666bad9/server/contracts/HarbegerNFT.sol). A Harberger Tax is a tax scheme where the owner of the asset picks the price at which they value an asset. The owner then pays a recurring tax on that self-assesed value. Anyone can force the owner to sell it to them if they offer to buy the asset at the price set by the seller. This incentivizes people to give an accurate estimate of how much they value the property.
+This project implements [Harberger Taxes](https://medium.com/@simondlr/what-is-harberger-tax-where-does-the-blockchain-fit-in-1329046922c6) using [NFTs](https://github.com/atilatech/smart/blob/4cacae1e5524f71f4c1c43ab0e50bdf7d666bad9/server/contracts/HarbegerNFT.sol). A Harberger Tax is a tax scheme where the owner of the asset picks the price at which they value an asset. The owner then pays a recurring tax on that self-assesed value. Anyone can force the owner to sell it to them if they offer to buy the asset at the price set by the seller. This incentivizes people to give an accurate estimate of how much they value the asset.
 
 A High-level walkthrough for the [NFT implementation of a Harbeger Tax](https://github.com/atilatech/smart/blob/4cacae1e5524f71f4c1c43ab0e50bdf7d666bad9/server/contracts/HarbegerNFT.sol):
 
@@ -36,7 +36,7 @@ The smart contracts can be found in [`server/contracts`](server/contracts)
 
 The UI for interacting with the smart contracts can be found in [`client`](client)
 
-The Contracts were deployed to the Ethereum Rinkeby, Polygon Mumbai and Optimism Kovan testnets. You can find a list of the deployed contract addresses in the [#contracts] section.
+The Contracts were deployed to the Ethereum Rinkeby, Polygon Mumbai and Optimism Kovan testnets. You can find a list of the deployed contract addresses in the [contracts](#contracts) section.
 
 In hindsight, the smart contracts and client code would have gone into one folder. However, this structure was chosen because during the ETHNYC hackathon hackathon, the original idea was to create smart contracts dynamically via an API. We ended up pivoting the idea slightly and didn't have enough time to refactor the code.
 
@@ -134,19 +134,14 @@ Note: We are merely using the dictionary here to make my arguements more convinc
 
 ## Deployed Contracts
 
-### Ethereum (Rinkeby)
-
-`0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca`
-https://rinkeby.etherscan.io/address/0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca
+### Ethereum
+NFT deployed to Ethereum (Rinkeby): https://rinkeby.etherscan.io/address/0x774f0ebcc5b481bd07f6ce7cf1a5ad69d52181ca
 
 Backup:
-or `0x562fb8007be0fbd2c6be21fc557a45d89f8ba31a`
 https://rinkeby.etherscan.io/address/0x562fb8007be0fbd2c6be21fc557a45d89f8ba31a
 
 ### Polygon
-NFT deployed to Polygon (Mumbai): 0x5fbc39092373b0e1c125c0e29c01e12045d3fe81
-View in block explorer: https://mumbai.polygonscan.com/address/0x5fbc39092373b0e1c125c0e29c01e12045d3fe81
+NFT deployed to Polygon (Mumbai): https://mumbai.polygonscan.com/address/0x5fbc39092373b0e1c125c0e29c01e12045d3fe81
 
-## Optimism (Kovan)
-NFT deployed to Optimism (Kovan): 0x290541b82b151cdc05ea1af04fe74f6d7633ccdc
-View in block explorer: https://kovan-optimistic.etherscan.io//address/0x290541b82b151cdc05ea1af04fe74f6d7633ccdc
+### Optimism
+NFT deployed to Optimism (Kovan): https://kovan-optimistic.etherscan.io//address/0x290541b82b151cdc05ea1af04fe74f6d7633ccdc
