@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import NFT from './scenes/NFT';
 import Moralis from 'moralis';
@@ -11,7 +10,7 @@ Moralis.start({ serverUrl: REACT_APP_MORALIS_SERVER_URL, appId: REACT_APP_MORALI
 
 function App() {
   return (
-    <div>
+    <div className="container shadow p-3 m-3">
       <NFT />
     </div>
   );
