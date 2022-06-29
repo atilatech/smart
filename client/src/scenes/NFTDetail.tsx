@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { CONFIG_CHAINS } from '../config';
 import CovalentService from '../services/CovalentService';
 import {withRouter,} from "react-router-dom";
+import NFTCard from '../components/NFTCard';
+import { NFTMetadata } from '../models/NFT';
 
 function NFTDetail(props: any) {
 
   const chainId = "4";
-  const [loadNft, setLoadNft] = useState({});
+  const [nft, setNft] = useState<NFTMetadata>();
 
   const activeChain = CONFIG_CHAINS[chainId];
 
@@ -18,14 +20,24 @@ function NFTDetail(props: any) {
 
     console.log(" props",  props);
 
-    const nft = await CovalentService.getNFTMetadata(chainId, activeChain.NFT_ADDRESS, 1 );
-    console.log([nft]);
+    const  {match : {params : { chainId, nftAddress, tokenId }}} = props;
+    const nftResponse = (await CovalentService.getNFTMetadata(chainId, nftAddress, tokenId ))?.data.data.items[0].nft_data[0].external_data;
+
+    nftResponse.tokenId = tokenId;
+    nftResponse.chainId = chainId;
+    nftResponse.address = nftAddress;
+
+    console.log({ nftResponse, chainId, nftAddress, tokenId })
+    setNft(nftResponse);
+
   }
   return (
     <div>
         <h1>
             NFT Detail
         </h1>
+
+        {nft &&  <NFTCard nft={nft} />}
 
 
     </div>

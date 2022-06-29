@@ -9,7 +9,7 @@ class CovalentService {
 
         const apiCompletionPromise = request({
             method: 'get',
-            url: `${CovalentService.baseURL}/${chainId}/tokens/${address}/${tokenId}/?key=${REACT_APP_COVALENT_API_KEY}`,
+            url: `${CovalentService.baseURL}/${chainId}/tokens/${address}/nft_metadata/${tokenId}/?key=${REACT_APP_COVALENT_API_KEY}`,
         });
 
         return apiCompletionPromise;

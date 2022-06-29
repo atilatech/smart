@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 
 // TODO move this too App.tsx so it doesn't have to call oral
-Moralis.start({ serverUrl: REACT_APP_MORALIS_SERVER_URL, appId: REACT_APP_MORALIS_APP_ID });
+// Moralis.start({ serverUrl: REACT_APP_MORALIS_SERVER_URL, appId: REACT_APP_MORALIS_APP_ID });
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={NFT} />
-          <Route path="nft/:chainId/:nftAddress/:tokenId" component={NFTDetail} />
+          <Route path="/nft/:chainId/:nftAddress/:tokenId" component={NFTDetail} />
         </Switch>
 
       </Router>
