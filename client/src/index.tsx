@@ -1,4 +1,5 @@
 import React from 'react';
+import "./index.css";
 import ReactDOM from 'react-dom/client';
 import 'antd/dist/antd.css';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -11,7 +12,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+  <App />
   </React.StrictMode>
 );
 

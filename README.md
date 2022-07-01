@@ -144,4 +144,4 @@ https://rinkeby.etherscan.io/address/0x562fb8007be0fbd2c6be21fc557a45d89f8ba31a
 NFT deployed to Polygon (Mumbai): https://mumbai.polygonscan.com/address/0x5fbc39092373b0e1c125c0e29c01e12045d3fe81
 
 ### Optimism
-NFT deployed to Optimism (Kovan): https://kovan-optimistic.etherscan.io//address/0x290541b82b151cdc05ea1af04fe74f6d7633ccdc
+NFT deployed to Optimism (Kovan): https://kovan-optimistic.etherscan.io/address/0x290541b82b151cdc05ea1af04fe74f6d7633ccdc
